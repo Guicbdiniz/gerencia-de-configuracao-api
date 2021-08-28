@@ -77,3 +77,9 @@ Para executar os testes, basta rodar o seguinte comando
 ## Autor
 
 - Aylton Almeida
+
+## Contribuidores
+
+- Guilherme Diniz
+- Weber Marques
+- Tulio Horta
