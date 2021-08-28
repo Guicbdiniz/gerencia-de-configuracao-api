@@ -1,0 +1,16 @@
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+uploads/*
+!uploads/.gitkeep
+!uploads/uploadedImages/.gitkeep
+
+*.sqlite
+
+# misc
+.env
+
+# dist
+dist
