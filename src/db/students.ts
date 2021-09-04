@@ -30,4 +30,29 @@ function addStudent(student: Student) {
  */
 const getStudents = () => Promise.resolve(Object.freeze([...students]));
 
-export { addStudent, getStudents };
+/**
+ * Update a student from the list
+ * @param studentUpdate Student updates
+ * @returns updated student
+ */
+function updateStudent(studentUpdate: Partial<Student>) {
+  const studentToUpdate = students.find(
+    (student) => student.id === studentUpdate.id
+  );
+
+  if (!studentToUpdate) {
+    return Promise.resolve(undefined);
+  }
+
+  const updatedStudent: Student = Object.assign(
+    {},
+    studentToUpdate,
+    studentUpdate
+  );
+
+  const studentIndex = students.indexOf(studentToUpdate);
+  students[studentIndex] = Object.freeze(updatedStudent);
+  return Promise.resolve(updatedStudent);
+}
+
+export { addStudent, getStudents, updateStudent };

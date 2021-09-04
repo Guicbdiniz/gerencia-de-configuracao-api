@@ -15,3 +15,11 @@ export const StudentSchema = {
   email: Joi.string().required().email(),
   city: Joi.string().required(),
 };
+
+export const StudentPartialSchema = {
+  id: Joi.number().required(),
+  name: Joi.string(),
+  birth: Joi.date(),
+  email: Joi.string().email(),
+  city: Joi.string(),
+};
