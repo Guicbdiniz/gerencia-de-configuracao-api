@@ -44,4 +44,11 @@ describe("Test student requests", () => {
       .send(updates)
       .then((res) => expect(res.body["name"]).toMatch("Tulhao"));
   });
+
+  it("should delete a student", async () => {
+    await supertest(app)
+      .delete("/students/1")
+      .send()
+      .then((res) => expect(res.body["id"]).toEqual(1));
+  });
 });

@@ -55,4 +55,22 @@ function updateStudent(studentUpdate: Partial<Student>) {
   return Promise.resolve(updatedStudent);
 }
 
-export { addStudent, getStudents, updateStudent };
+/**
+ * Delete a student from the list
+ * @param studentId deleted student ID
+ * @returns deleted student
+ */
+function deleteStudent(studentId: Number) {
+  const studentToDelete = students.find((student) => student.id === studentId);
+
+  if (!studentToDelete) {
+    return Promise.resolve(undefined);
+  }
+
+  const studentIndex = students.indexOf(studentToDelete);
+
+  students.splice(studentIndex, 1);
+  return Promise.resolve(studentToDelete);
+}
+
+export { addStudent, getStudents, updateStudent, deleteStudent };

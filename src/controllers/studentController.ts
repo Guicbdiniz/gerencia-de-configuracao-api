@@ -20,4 +20,16 @@ export class StudentsController {
 
     return res.status(StatusCodes.OK).json(updatedStudent);
   }
+
+  async delete(req: Request, res: Response) {
+    const studentId = parseInt(req.params["studentId"]);
+
+    if (studentId === NaN) {
+      return res.status(StatusCodes.BAD_REQUEST).send("Invalid student ID");
+    }
+
+    const deletedStudent = await StudentsDB.deleteStudent(studentId);
+
+    return res.status(StatusCodes.OK).json(deletedStudent);
+  }
 }
