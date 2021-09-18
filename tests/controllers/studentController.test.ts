@@ -35,20 +35,37 @@ describe("Test student requests", () => {
 
   it("should update a student", async () => {
     const updates = {
-      id: 1,
+      id: 2,
       name: "Tulhao",
     };
 
     await supertest(app)
       .put("/students")
       .send(updates)
+      .expect(200)
       .then((res) => expect(res.body["name"]).toMatch("Tulhao"));
   });
 
   it("should delete a student", async () => {
     await supertest(app)
-      .delete("/students/1")
+      .delete("/students/2")
       .send()
-      .then((res) => expect(res.body["id"]).toEqual(1));
+      .expect(200)
+      .then((res) => expect(res.body["id"]).toEqual(2));
+
+    await supertest(app)
+      .get("/students")
+      .expect(200)
+      .then((res) =>
+        expect(res.body).toMatchObject([
+          {
+            id: 1,
+            name: "John Doe",
+            email: "john.doe@example.com",
+            city: "Belo Horizonte",
+            birth: new Date("11/13/1999").toISOString(),
+          },
+        ])
+      );
   });
 });
