@@ -5,14 +5,15 @@ on:
     branch: master
 
 jobs:
-  hello:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Hello World"
-  listing:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v2
-      - name: list all files
-        run: ls
+      - env:
+          NODE_ENV: ${{ secrets.NODE_ENV }}
+          PORT: ${{ secrets.PORT }}
+      - run: echo "Running in $NODE_ENV and port $PORT"
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: npm install
+      - run: npm test
+      - run: npm build
