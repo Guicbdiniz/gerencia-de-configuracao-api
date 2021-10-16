@@ -1,58 +1,56 @@
-import { Student } from "../types/Student";
-
-const students: Student[] = [
-  {
-    id: 1,
-    name: "John Doe",
-    email: "john.doe@example.com",
-    city: "Belo Horizonte",
-    birth: new Date("11/13/1999"),
-  },
-];
+import { getConnection } from "typeorm";
+import { Student } from "../entities/Student";
 
 /**
  * Add new student to list
  * @param student New student
  * @returns new student
  */
-function addStudent(student: Student) {
-  const newStudent = {
-    id: students.length ? students[students.length - 1].id! + 1 : 1,
-    ...student,
-  };
-  students.push(Object.freeze(newStudent));
-  return Promise.resolve(newStudent);
+async function addStudent(student: Student) {
+  const newStudent = new Student(student);
+
+  const connection = getConnection().getRepository(Student);
+  await connection.save(newStudent);
+
+  return newStudent;
 }
 
 /**
  * Returns student list
  * @returns Students
  */
-const getStudents = () => Promise.resolve(Object.freeze([...students]));
+const getStudents = () => getConnection().getRepository(Student).find();
 
 /**
  * Update a student from the list
  * @param studentUpdate Student updates
  * @returns updated student
  */
-function updateStudent(studentUpdate: Partial<Student>) {
-  const studentToUpdate = students.find(
-    (student) => student.id === studentUpdate.id
-  );
+async function updateStudent(studentUpdate: Partial<Student>) {
+  let studentToUpdate = await getConnection()
+    .getRepository(Student)
+    .createQueryBuilder("student")
+    .where("student.id = :id", { id: studentUpdate.id })
+    .getOne();
 
   if (!studentToUpdate) {
     return Promise.resolve(undefined);
   }
 
-  const updatedStudent: Student = Object.assign(
-    {},
-    studentToUpdate,
-    studentUpdate
-  );
+  await getConnection()
+    .createQueryBuilder()
+    .update(Student)
+    .set(studentUpdate)
+    .where("student.id = :id", { id: studentUpdate.id })
+    .execute();
 
-  const studentIndex = students.indexOf(studentToUpdate);
-  students[studentIndex] = Object.freeze(updatedStudent);
-  return Promise.resolve(updatedStudent);
+  studentToUpdate = await getConnection()
+    .getRepository(Student)
+    .createQueryBuilder("student")
+    .where("student.id = :id", { id: studentUpdate.id })
+    .getOne();
+
+  return Promise.resolve(studentUpdate);
 }
 
 /**
@@ -60,17 +58,25 @@ function updateStudent(studentUpdate: Partial<Student>) {
  * @param studentId deleted student ID
  * @returns deleted student
  */
-function deleteStudent(studentId: Number) {
-  const studentToDelete = students.find((student) => student.id === studentId);
+async function deleteStudent(studentId: Number) {
+  const studentToDelete = await getConnection()
+    .getRepository(Student)
+    .createQueryBuilder("student")
+    .where("student.id = :id", { id: studentId })
+    .getOne();
 
   if (!studentToDelete) {
     return Promise.resolve(undefined);
   }
 
-  const studentIndex = students.indexOf(studentToDelete);
+  await getConnection()
+    .createQueryBuilder()
+    .delete()
+    .from(Student)
+    .where("id = :id", { id: studentId })
+    .execute();
 
-  students.splice(studentIndex, 1);
-  return Promise.resolve(studentToDelete);
+  return studentToDelete;
 }
 
 export { addStudent, getStudents, updateStudent, deleteStudent };

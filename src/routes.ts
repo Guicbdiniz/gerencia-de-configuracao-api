@@ -1,7 +1,7 @@
 import { celebrate, Joi } from "celebrate";
 import express, { response } from "express";
 import { StudentsController } from "./controllers/studentController";
-import { StudentPartialSchema, StudentSchema } from "./types/Student";
+import { StudentPartialSchema, StudentSchema } from "./entities/Student";
 
 const routes = express.Router();
 
