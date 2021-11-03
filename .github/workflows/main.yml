@@ -18,3 +18,14 @@ jobs:
         run: npm install
       - run: npm test
       - run: npm build
+
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "new-student-api"
+          heroku_email: "guicbdeniz@hotmail.com"
+          usedocker: true
